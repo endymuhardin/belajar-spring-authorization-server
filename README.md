@@ -2,7 +2,13 @@
 
 Contoh kode program [Spring Authorization Server yang baru](https://spring.io/blog/2020/11/10/spring-authorization-server-0-0-3-available-now).
 
-## Mendapatkan Access Token, Grant Type Authorization Code ##
+Cara menjalankan aplikasi
+
+```
+mvn clean spring-boot:run
+```
+
+## Mendapatkan Access Token dengan Grant Type Authorization Code ##
 
 1. Cari tahu dulu URL yang digunakan untuk prosedur OAuth 2.0
 
@@ -84,7 +90,34 @@ Contoh kode program [Spring Authorization Server yang baru](https://spring.io/bl
 
     [![JWT.io](./img/jwt-io.png)](./img/jwt-io.png)
 
-6. Ambil informasi public key di `jwks_uri`
+## Mendapatkan Access Token dengan Grant Type Resource Owner Password ##
+
+1. Lakukan HTTP Request untuk mendapatkan access token
+
+    ```
+    curl --location --request POST 'http://127.0.0.1:9000/oauth2/token' \
+      --header 'Authorization: Basic YmVsYWphcjpiZWxhamFyMTIz' \
+      --header 'Content-Type: application/x-www-form-urlencoded' \
+      --data-urlencode 'grant_type=password' \
+      --data-urlencode 'username=user001' \
+      --data-urlencode 'password=teststaff'
+    ```
+
+2. Responsenya seperti ini
+
+    ```json
+    {
+      "error_description": "OAuth 2.0 Parameter: grant_type",
+      "error": "unsupported_grant_type",
+      "error_uri": "https://tools.ietf.org/html/rfc6749#section-5.2"
+    }
+    ```
+    
+    karena di versi `0.1.0` ini grant type `password` belum disupport
+
+## Verifikasi JWT Token ##
+
+1. Ambil informasi public key di `jwks_uri`
 
     ```
     curl http://127.0.0.1:9000/oauth2/jwks
@@ -105,7 +138,7 @@ Contoh kode program [Spring Authorization Server yang baru](https://spring.io/bl
     }
     ```
 
-7. Dapatkan public key dari `JWKS` dengan menggunakan library `jwk-to-pem` yang bisa dijalankan di [https://npm.runkit.com](https://npm.runkit.com).
+2. Dapatkan public key dari `JWKS` dengan menggunakan library `jwk-to-pem` yang bisa dijalankan di [https://npm.runkit.com](https://npm.runkit.com).
 
     Paste kode program berikut di RunKit, jangan lupa ganti variabel `jwk` di baris 2 dengan output dari langkah sebelumnya
    
@@ -120,7 +153,7 @@ Contoh kode program [Spring Authorization Server yang baru](https://spring.io/bl
 
     [![JWT to PEM](./img/jwt-to-pem.png)](./img/jwt-to-pem.png)
    
-8. Copy public key yang didapatkan di RunKit
+3. Copy public key yang didapatkan di RunKit
 
     ```
     -----BEGIN PUBLIC KEY-----
@@ -134,8 +167,6 @@ Contoh kode program [Spring Authorization Server yang baru](https://spring.io/bl
     -----END PUBLIC KEY-----
     ```
 
-9. Paste di `JWT.io` tadi untuk verifikasi signature. Seharusnya hasilnya verified.
+4. Paste di `JWT.io` tadi untuk verifikasi signature. Seharusnya hasilnya verified.
 
     [![JWT Signature Verified](./img/jwt-verified.png)](./img/jwt-verified.png)
-
-    

@@ -34,6 +34,7 @@ public class AuthorizationServerConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.PASSWORD)
                 .redirectUri("http://example.com")
                 .clientSettings(clientSettings -> clientSettings.requireUserConsent(true))
                 .scope(OidcScopes.OPENID)
