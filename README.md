@@ -62,7 +62,7 @@ Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:
     * Code Verifier : 43 - 128 random string. Misal : `dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk`
     * Code Challenge : SHA256(code verifier). Misal : `E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM`
 
-2. Akses `authorization_endpoint` di [http://127.0.0.1:9000/oauth2/authorize?client_id=belajar&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5](http://127.0.0.1:9000/oauth2/authorize?client_id=belajar&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5). 
+2. Akses `authorization_endpoint` di [http://auth-server:9000/oauth2/authorize?client_id=mobileapp&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5](http://auth-server:9000/oauth2/authorize?client_id=mobileapp&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5). 
    
     [![Halaman login](./img/login.png)](./img/login.png)
 
@@ -79,25 +79,25 @@ Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:
 4. Tukarkan `authorization_code` menjadi `access_token`
 
     ```
-    curl --location --request POST 'http://127.0.0.1:9000/oauth2/token' \
-      --header 'Authorization: Basic YmVsYWphcjpiZWxhamFyMTIz' \
+    curl --location --request POST 'http://auth-server:9000/oauth2/token' \
+      --header 'Authorization: Basic bW9iaWxlYXBwOmFiY2Q=' \
       --header 'Content-Type: application/x-www-form-urlencoded' \
-      --data-urlencode 'code=VGKtW2sf5xEmInfxFOo3k74DeiimCOciSyzjBG_9adF9Co3lTmzcWGMFNFcM5bA-av_tdBo3rh6MrLEoOjJ0_0RjvrtFtFj3L9WqadaRs_18OK1RDzo7-tgAvAT6Ub81' \
-      --data-urlencode 'code_verifier=7t1CtzIQKW7mmCk0HAwHpDX7sqlgFkJ9CG8WZrbmn1UBWkpxrLxlAqOHQ627' \
       --data-urlencode 'grant_type=authorization_code' \
       --data-urlencode 'redirect_uri=http://example.com' \
-      --data-urlencode 'client_id=belajar'
+      --data-urlencode 'client_id=mobileapp' \
+      --data-urlencode 'code=s2QnpXbI7y2TB89HKK_s52Vm9d0r_XYd_OCPr7_sqvq4i0zApwDSK8g44JZaWoZjUiOAowaXHwknBah133cVmF9ng5noqibE45lAFo3ruKYTwxiDr32K81jzB6z3JyRr' \
+      --data-urlencode 'code_verifier=7t1CtzIQKW7mmCk0HAwHpDX7sqlgFkJ9CG8WZrbmn1UBWkpxrLxlAqOHQ627'
     ```
    
     Hasilnya seperti ini 
    
     ```json
     {
-       "access_token": "eyJraWQiOiJiNjMxY2I5Ny01OGYxLTRjYzItYjA1Ni05NWYzMzY4NmYxZTciLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c2VyMDAxIiwiYXVkIjoiYmVsYWphciIsIm5iZiI6MTYxNjY2NzI3OSwiaXNzIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjkwMDAiLCJleHAiOjE2MTY2Njc1NzksImlhdCI6MTYxNjY2NzI3OSwianRpIjoiOWU5ZjljMGUtMDM2Yy00NzgyLWEwNTUtMGUxMGM4MGJjMmNjIn0.heqkNPRs750V0ZeImxALdSsEilavSpq6LuzmcAvP5y_cfees5Pg8zP_hv-dEVtl5SFFhIBemy5otft93jcmjsLBEtesnZHLQIA9MQdEFPc4SUD4OaepcF28tHDQVnogkLZ_hifbe33DvZT3sUAutowgobpu-Zwz27ba3tu7EYVv-UkAZe6LIgKlVCLRYkToWY70ttSDGwHUWRdR2bO9_fYhSUYnXB8fwpaMPIA_MrT2wnuzIwL4ZhTxbG2HNX-qNBehawLS4osQ38jOACRKHioOwA_y4-LgFGIdaY4ZczjBTuWAdgdJy6XFiH6w_NatmuFCUvCzsJwqMZ1k8WCQRVQ",
-       "refresh_token": "izgAaCk8Kzcz1pEsLcPC9B4Ov6n3itZljLyghY3v1KZy1FagljD3YShqPIcBV80WJABR_qzULX0u6aaDz6hOg-YTwOBlbCbAGbEnHEF3-amwjdQxnWF0ggsu2lQbiwDX",
+       "access_token": "eyJraWQiOiIzYTM5ZDdhNy0yMjc4LTQwZjYtOTgxNS03YWY5MzkwNmRkMzEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c2VyMDAxIiwiYXVkIjoibW9iaWxlYXBwIiwibmJmIjoxNjI2OTA4NzEzLCJpc3MiOiJodHRwOlwvXC9hdXRoLXNlcnZlcjo5MDAwIiwiZXhwIjoxNjI2OTA5MDEzLCJpYXQiOjE2MjY5MDg3MTMsImp0aSI6ImZkYmNhMzQ0LTAxMDgtNDU2NC1iNWYxLWQ2Y2FjYjJjZDZkYSJ9.qlzoGCoUjrZcAhzPZGQKO4TT6JZrS7NABOvxh2pT_WWulj98HBYBz1sRhh9dbnJIovNu448aNAzT8othGP8ZHl-kzYrrHq4S58uS3oWfu3o5pjfF-k0CCYVSLyyYi0BdZWnUjJhn-p_CNOlh5779wt5H5Tck8b5Jz4hcZXeGgtpIiWmRNtsrOB-9W2yY5Tp1jn10J4FwxIJR5sxubtZqidNC_zvQ0GoE_ee8QkhgN1zdmtRGI3uunqr83dZrwkbmCFcEGJr03X9RJnMzEZRQMsHNqdhCDpXMsGohwpyz1b1iyFC-rqb5i-14zSIgQWJ1ce-M0DGa_Oyhni9GyMoHgQ",
+       "refresh_token": "NV_HKGl3r0Wt1FQ8ao9DkIZsa9hMAFxYE6GN2F_R8tpix1O6crkw2k_FVz_4ZqFIroaoyS2j-nJqQmkgi9eAvVuJd_XghMJD7fY2rIRO1bUiml9HguAxoHypLjTgKWqv",
        "token_type": "Bearer",
-       "expires_in": "299"
-    } 
+       "expires_in": 299
+    }
     ```
 
 5. Decode di [JWT.io](https://jwt.io)

@@ -47,21 +47,26 @@ public class AuthorizationServerConfig {
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder encoder) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("belajar")
-                .clientSecret(encoder.encode("secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
+                .clientId("jsapp")
+                .clientName("jsapp")
+                .clientSecret(encoder.encode("abcd"))
+                // TODO : ganti dengan yang baru setelah ada update spring-authorization-server
+                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                //.clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
-                .redirectUri("http://127.0.0.1:8080/authorized")
+                .redirectUri("http://example.com")
+                .redirectUri("http://client-app:8080")
                 .scope(OidcScopes.OPENID)
                 .scope("message.read")
                 .scope("message.write")
-                .clientSettings(clientSettings -> clientSettings.requireUserConsent(true))
+                .clientSettings(clientSettings -> clientSettings
+                        .requireUserConsent(true)
+                        .requireProofKey(true)
+                )
                 .build();
 
-        // Save registered client in db as if in-memory
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.save(registeredClient);
 
