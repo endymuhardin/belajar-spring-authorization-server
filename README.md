@@ -8,6 +8,15 @@ Cara menjalankan aplikasi
 mvn clean spring-boot:run
 ```
 
+Perhatikan log aplikasi untuk mendapatkan JDBC URL database H2 seperti ini
+
+```
+H2 console available at '/h2-console'. 
+Database available at 'jdbc:h2:mem:b967a89c-dcf0-4752-b643-bc77419deaee'
+```
+
+Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:9000/h2-console)
+
 ## Mendapatkan Access Token dengan Grant Type Authorization Code ##
 
 1. Cari tahu dulu URL yang digunakan untuk prosedur OAuth 2.0
@@ -48,7 +57,12 @@ mvn clean spring-boot:run
     }
     ```
 
-2. Akses `authorization_endpoint` di [http://127.0.0.1:9000/oauth2/authorize?client_id=belajar&redirect_uri=http://example.com&response_type=code](http://127.0.0.1:9000/oauth2/authorize). 
+2. Generate PKCE
+
+    * Code Verifier : 43 - 128 random string. Misal : `dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk`
+    * Code Challenge : SHA256(code verifier). Misal : `E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM`
+
+2. Akses `authorization_endpoint` di [http://127.0.0.1:9000/oauth2/authorize?client_id=belajar&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5](http://127.0.0.1:9000/oauth2/authorize?client_id=belajar&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5). 
    
     [![Halaman login](./img/login.png)](./img/login.png)
 
@@ -58,7 +72,7 @@ mvn clean spring-boot:run
 
     [![Consent Page](./img/consent-page.png)](./img/consent-page.png)
 
-3. Dapatkan `authorization_code` setelah berhasil login, misalnya `4KVvk3r1UNqAMJdr8lzBDdaO8HammyuBhm4E5C-YIz01J4cxaFY7xmAYlmWepflvpL6VNES4_yyUFcTmE2dHJGrtWVDnGmHhKzvz7GwyAoo7ZsLVcW9LWf-72COIJSxv`
+3. Dapatkan `authorization_code` setelah berhasil login, misalnya `IE_yzrqdjYxgKbxr1vIjYSAbjB-lDP_zc_cf4fX7rf-ObFbzRuY8UrM_h-X-MzrO2jVDVWr9fYr-d0XGdTw-35kFo2_6K5CXF9oXWFm_YuUIgw_R2Q43TDHLUqWzcobm`
 
     [![Redirect Page](./img/authcode.png)](./img/authcode.png)
 
@@ -68,8 +82,8 @@ mvn clean spring-boot:run
     curl --location --request POST 'http://127.0.0.1:9000/oauth2/token' \
       --header 'Authorization: Basic YmVsYWphcjpiZWxhamFyMTIz' \
       --header 'Content-Type: application/x-www-form-urlencoded' \
-      --header 'Cookie: JSESSIONID=EE4C292A9FC39CABC9313DB6542C3A1C' \
-      --data-urlencode 'code=4KVvk3r1UNqAMJdr8lzBDdaO8HammyuBhm4E5C-YIz01J4cxaFY7xmAYlmWepflvpL6VNES4_yyUFcTmE2dHJGrtWVDnGmHhKzvz7GwyAoo7ZsLVcW9LWf-72COIJSxv' \
+      --data-urlencode 'code=VGKtW2sf5xEmInfxFOo3k74DeiimCOciSyzjBG_9adF9Co3lTmzcWGMFNFcM5bA-av_tdBo3rh6MrLEoOjJ0_0RjvrtFtFj3L9WqadaRs_18OK1RDzo7-tgAvAT6Ub81' \
+      --data-urlencode 'code_verifier=7t1CtzIQKW7mmCk0HAwHpDX7sqlgFkJ9CG8WZrbmn1UBWkpxrLxlAqOHQ627' \
       --data-urlencode 'grant_type=authorization_code' \
       --data-urlencode 'redirect_uri=http://example.com' \
       --data-urlencode 'client_id=belajar'
@@ -113,7 +127,10 @@ mvn clean spring-boot:run
     }
     ```
     
-    karena di versi `0.1.0` ini grant type `password` belum disupport
+    karena di versi `0.1.0` ini grant type `password` belum disupport. 
+   
+    > Update : grant type password [tidak akan disupport](https://github.com/spring-projects-experimental/spring-authorization-server/pull/115#issuecomment-696009503).
+    > Gunakan grant type authorization code dengan PKCE
 
 ## Verifikasi JWT Token ##
 
@@ -170,3 +187,9 @@ mvn clean spring-boot:run
 4. Paste di `JWT.io` tadi untuk verifikasi signature. Seharusnya hasilnya verified.
 
     [![JWT Signature Verified](./img/jwt-verified.png)](./img/jwt-verified.png)
+   
+## Referensi ##
+
+* [Intro OAuth 2.1](https://aaronparecki.com/2019/12/12/21/its-time-for-oauth-2-dot-1)
+* [Proof Key for Code Exchange by OAuth Public Clients](https://datatracker.ietf.org/doc/html/rfc7636)
+* [PKCE di Native Apps](https://datatracker.ietf.org/doc/html/rfc8252)
