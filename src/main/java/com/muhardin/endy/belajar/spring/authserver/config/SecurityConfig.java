@@ -43,7 +43,20 @@ public class SecurityConfig{
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests ->
-            authorizeRequests.anyRequest().authenticated()
+                {
+                    try {
+                        authorizeRequests
+                                .antMatchers("/h2-console/**").permitAll()
+                                .and()
+                                .csrf().ignoringAntMatchers("/h2-console/**")
+                                .and().headers().frameOptions().sameOrigin()
+                                .and()
+                                .authorizeRequests()
+                                .anyRequest().authenticated();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
         )
         .formLogin(withDefaults());
         return http.build();
