@@ -1,6 +1,6 @@
 # Belajar Spring Authorization Server #
 
-Contoh kode program [Spring Authorization Server yang baru](https://spring.io/blog/2020/11/10/spring-authorization-server-0-0-3-available-now).
+Contoh kode program [Spring Authorization Server yang baru](https://github.com/spring-projects-experimental/spring-authorization-server).
 
 Cara menjalankan aplikasi
 
