@@ -1,5 +1,6 @@
 package com.muhardin.endy.belajar.resourceserver.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,8 @@ import java.util.Map;
 
 @RestController
 public class UserInfoController {
+
+    @PreAuthorize("hasAnyAuthority('SCOPE_EDIT_TRANSAKSI')")
     @GetMapping("/userinfo")
     public Map<String, Object> userInfo(Authentication currentUser) {
         Map<String, Object> hasil = new HashMap<>();
@@ -24,7 +27,7 @@ public class UserInfoController {
 
         JwtAuthenticationToken currentAuthentication = (JwtAuthenticationToken) currentUser;
         currentAuthentication.getName();
-        
+
 
         return hasil;
     }
