@@ -19,12 +19,12 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2TokenType;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.*;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -50,14 +50,12 @@ public class AuthorizationServerConfig {
     }
 
     @Bean
-    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder encoder) {
+    public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("jsapp")
                 .clientName("jsapp")
-                .clientSecret(encoder.encode("abcd"))
-                // TODO : ganti dengan yang baru setelah ada update spring-authorization-server
-                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                //.clientAuthenticationMethod(ClientAuthenticationMethod.BASIC)
+                .clientSecret("abcd")
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
@@ -66,17 +64,23 @@ public class AuthorizationServerConfig {
                 .scope(OidcScopes.OPENID)
                 .scope("message.read")
                 .scope("message.write")
-                .clientSettings(clientSettings -> clientSettings
-                        .requireUserConsent(true)
-                        .requireProofKey(true)
-                )
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(false)
+                        .requireProofKey(false)
+                        .build())
                 .build();
 
+        JdbcRegisteredClientRepository.RegisteredClientParametersMapper mapper
+                = new JdbcRegisteredClientRepository.RegisteredClientParametersMapper();
+        mapper.setPasswordEncoder(passwordEncoder);
+
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+        registeredClientRepository.setRegisteredClientParametersMapper(mapper);
         registeredClientRepository.save(registeredClient);
 
         return registeredClientRepository;
     }
+
 
     @Bean
     OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
@@ -93,7 +97,9 @@ public class AuthorizationServerConfig {
 
     @Bean
     public ProviderSettings providerSettings() {
-        return new ProviderSettings().issuer("http://auth-server:9000");
+        return ProviderSettings.builder()
+                .issuer("http://auth-server:9000")
+                .build();
     }
 
     @Bean
