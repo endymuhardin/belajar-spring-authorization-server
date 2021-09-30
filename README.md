@@ -188,6 +188,30 @@ Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:
 
     [![JWT Signature Verified](./img/jwt-verified.png)](./img/jwt-verified.png)
    
+## Memperbarui Access Token yang sudah expire dengan Refresh Token ##
+
+1. Buat request ke endpoint `/oauth/token` dengan `grant_type=refresh_token` dan menyertakan `refresh_token`
+
+    ```
+    curl --location --request POST 'http://auth-server:9000/oauth2/token' \
+      --header 'Authorization: Basic bW9iaWxlYXBwOmFiY2Q=' \
+      --header 'Content-Type: application/x-www-form-urlencoded' \
+      --data-urlencode 'grant_type=refresh_token' \
+      --data-urlencode 'client_id=mobileapp' \
+      --data-urlencode 'refresh_token=NV_HKGl3r0Wt1FQ8ao9DkIZsa9hMAFxYE6GN2F_R8tpix1O6crkw2k_FVz_4ZqFIroaoyS2j-nJqQmkgi9eAvVuJd_XghMJD7fY2rIRO1bUiml9HguAxoHypLjTgKWqv'
+    ```
+
+2. Hasilnya seperti ini
+
+    ```json
+    {
+      "access_token":"eyJraWQiOiI4NzNjN2MzMC1hZGZjLTQzZDgtYTE1OS05YzU1MTk5ZGM3OWQiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c2VyMDAxIiwiYXVkIjoibW9iaWxlYXBwIiwibmJmIjoxNjMzMDE4ODY2LCJpc3MiOiJodHRwOlwvXC9hdXRoLXNlcnZlcjo5MDAwIiwiZXhwIjoxNjMzMDE5MTY2LCJpYXQiOjE2MzMwMTg4NjYsImF1dGhvcml0aWVzIjpbIlZJRVdfVFJBTlNBS1NJIl19.DaiGLylpDDX2_pelXScaPaiiZBQoUSNtwM8mpBc6R6MGzchKmN_KncUgmQ0ZYpAm_-gBJfSW8JB-yHcDeI5e4Hc3q0TvJYttiFrnOb9ar3b5PIQYVy1C8uXx_-wDohdVXn9EFrlKKnmL8wnSKuvn57Hl5h2AC5qAnKAnSM0Uqm-921hxjNi8JDaKlAygv2uwt0pgPg1Yn0kIyo6tStmQyVh2tUX-X1t-ISSfLCgfdNtSF90NwzuV0a08CFxxOxMyXlTKI_u7pn_FGH_tQq5VOSAZqXu_2qBI6f5oOAX4qISs2OKODOETsiJdHXMC-cZHOn9jECZ0-0TE4O1oLg2UWA",
+        "refresh_token":"QhTGzH6ajcCeTGRgNDiEK_YSrQhlbP82WdeB57YoBz-9oRp2X2_n7eqo-y_0-4fas_mZPMRiVXUzfU5wC6fyAeW9hCygfzCwEWfZmjHWwmi2DV6BNitYNe_tkhdfy3sT",
+        "token_type":"Bearer",
+        "expires_in":299
+    }
+    ```
+
 ## Referensi ##
 
 * [Intro OAuth 2.1](https://aaronparecki.com/2019/12/12/21/its-time-for-oauth-2-dot-1)
