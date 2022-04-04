@@ -54,7 +54,7 @@ public class AuthorizationServerConfig {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("jsapp")
                 .clientName("jsapp")
-                .clientSecret("abcd")
+                .clientSecret("$2a$10$5X3vk2031DCsR5XLxb.cCevqUR0157LQE9iqCsmmEspO6Hyhcac/a") // jsapp123
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -72,7 +72,6 @@ public class AuthorizationServerConfig {
 
         JdbcRegisteredClientRepository.RegisteredClientParametersMapper mapper
                 = new JdbcRegisteredClientRepository.RegisteredClientParametersMapper();
-        mapper.setPasswordEncoder(passwordEncoder);
 
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.setRegisteredClientParametersMapper(mapper);
