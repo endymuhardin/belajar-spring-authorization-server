@@ -1,0 +1,11 @@
+services:
+  db-muamalat-va:
+    image: postgres
+    environment:
+      - POSTGRES_DB=authserver-db
+      - POSTGRES_USER=authserver
+      - POSTGRES_PASSWORD=authserver123
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db-authserver:/var/lib/postgresql/data
