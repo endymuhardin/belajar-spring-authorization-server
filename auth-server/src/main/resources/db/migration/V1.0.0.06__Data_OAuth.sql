@@ -1,8 +1,11 @@
+-- client id : mobileapp
+-- client_secret : mobileapp123
+
 insert into oauth2_registered_client (id, client_id, client_name,
       client_authentication_methods, client_secret, authorization_grant_types,
       redirect_uris, scopes, client_settings, token_settings)
 values ('mobileapp', 'mobileapp', 'mobileapp',
-        'client_secret_basic', '$2a$10$sofxc4M7xltDyu4XynR7ouFDqGTr5BaTykK59wgsOopbMVjuBXQD6',
+        'client_secret_basic', '$2a$10$ntl7zvMGVGyOJ5SbLMZFiOxWrT2FqJCRfp3UR7tPIK8n2O10XacMW',
         'authorization_code,refresh_token', 'http://example.com,mobileapp:/authcode',
         'openid,message.read,message.write',
         '{"@class":"java.util.Collections$UnmodifiableMap","settings.client.require-proof-key":false,"settings.client.require-authorization-consent":false}',
