@@ -18,13 +18,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.OAuth2TokenType;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.*;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -33,12 +31,18 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Instant;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerConfig {
+
+    private static final Set<String> SCOPES = Collections.unmodifiableSet(
+            Stream.of("openid", "profile", "email").collect(Collectors.toSet()));
 
     private static final String AUTHORITIES_CLAIM = "authorities";
 
@@ -51,23 +55,17 @@ public class AuthorizationServerConfig {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate, PasswordEncoder passwordEncoder) {
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
+
+        Instant clientIdIssuedAt = Instant.now();
+        RegisteredClient publicClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("jsapp")
                 .clientName("jsapp")
                 .clientSecret("$2a$10$5X3vk2031DCsR5XLxb.cCevqUR0157LQE9iqCsmmEspO6Hyhcac/a") // jsapp123
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .clientIdIssuedAt(clientIdIssuedAt)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .redirectUri("http://example.com")
-                .redirectUri("http://client-app:8080")
-                .scope(OidcScopes.OPENID)
-                .scope("message.read")
-                .scope("message.write")
-                .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(false)
-                        .requireProofKey(false)
-                        .build())
+                .scopes(scopes -> scopes.addAll(SCOPES))
                 .build();
 
         JdbcRegisteredClientRepository.RegisteredClientParametersMapper mapper
@@ -75,7 +73,7 @@ public class AuthorizationServerConfig {
 
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.setRegisteredClientParametersMapper(mapper);
-        //registeredClientRepository.save(registeredClient);
+        registeredClientRepository.save(publicClient);
 
         return registeredClientRepository;
     }
