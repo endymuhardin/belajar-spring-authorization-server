@@ -59,10 +59,10 @@ Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:
 
 2. Generate PKCE
 
-    * Code Verifier : 43 - 128 random string. Misal : `dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk`
-    * Code Challenge : SHA256(code verifier). Misal : `E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM`
+    * Code Verifier : 43 - 128 random string. Misal : `EmJ1jTS245HXMu5dDFc36XlEK02FCfT3BAvbvVfBiXSl`
+    * Code Challenge : SHA256(code verifier). Misal : `ea3rEXbTCcvWGOL2m6J1lT2VWv-sLrnS2i-UeaNENbw`
 
-2. Akses `authorization_endpoint` di [http://auth-server:9000/oauth2/authorize?client_id=mobileapp&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5](http://auth-server:9000/oauth2/authorize?client_id=mobileapp&redirect_uri=http://example.com&response_type=code&state=abcd1234&code_challenge_method=S256&code_challenge=E283F7CEC6F6C029A52D82EBD6DBF2C3026108653671A6ED82BBE64C9B04B6D5). 
+2. Akses `authorization_endpoint` di [http://auth-server/oauth2/authorize?client_id=mobileapp&redirect_uri=http://example.com&response_type=code&scope=openid&state=abcd1234&code_challenge_method=S256&code_challenge=ea3rEXbTCcvWGOL2m6J1lT2VWv-sLrnS2i-UeaNENbw](http://auth-server/oauth2/authorize?client_id=mobileapp&redirect_uri=http://example.com&response_type=code&scope=openid&state=abcd1234&code_challenge_method=S256&code_challenge=ea3rEXbTCcvWGOL2m6J1lT2VWv-sLrnS2i-UeaNENbw). 
    
     [![Halaman login](./img/login.png)](./img/login.png)
 
@@ -86,7 +86,7 @@ Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:
       --data-urlencode 'redirect_uri=http://example.com' \
       --data-urlencode 'client_id=mobileapp' \
       --data-urlencode 'code=s2QnpXbI7y2TB89HKK_s52Vm9d0r_XYd_OCPr7_sqvq4i0zApwDSK8g44JZaWoZjUiOAowaXHwknBah133cVmF9ng5noqibE45lAFo3ruKYTwxiDr32K81jzB6z3JyRr' \
-      --data-urlencode 'code_verifier=7t1CtzIQKW7mmCk0HAwHpDX7sqlgFkJ9CG8WZrbmn1UBWkpxrLxlAqOHQ627'
+      --data-urlencode 'code_verifier=EmJ1jTS245HXMu5dDFc36XlEK02FCfT3BAvbvVfBiXSl'
     ```
    
     Hasilnya seperti ini 
@@ -211,6 +211,12 @@ Database H2 bisa diakses di [http://localhost:9000/h2-console](http://localhost:
         "expires_in":299
     }
     ```
+
+## Deploy Authserver ke Heroku ##
+
+```
+git push heroku `git subtree split --prefix auth-server`:master --force
+```
 
 ## Referensi ##
 

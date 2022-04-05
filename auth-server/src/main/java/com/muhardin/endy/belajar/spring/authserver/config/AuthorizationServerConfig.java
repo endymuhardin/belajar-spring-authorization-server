@@ -75,7 +75,7 @@ public class AuthorizationServerConfig {
 
         JdbcRegisteredClientRepository registeredClientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         registeredClientRepository.setRegisteredClientParametersMapper(mapper);
-        registeredClientRepository.save(registeredClient);
+        //registeredClientRepository.save(registeredClient);
 
         return registeredClientRepository;
     }
