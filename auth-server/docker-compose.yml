@@ -1,5 +1,5 @@
 services:
-  db-muamalat-va:
+  db-authserver:
     image: postgres
     environment:
       - POSTGRES_DB=authserver-db
