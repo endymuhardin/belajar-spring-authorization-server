@@ -24,8 +24,8 @@ create table s_users_passwords (
 
 create table s_permissions (
     id    varchar(36),
-    label varchar(100) not null,
-    value varchar(100) not null,
+    permission_label varchar(100) not null,
+    permission_value varchar(100) not null,
     primary key (id),
     unique (value)
 );

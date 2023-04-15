@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.6.5</version>
+		<version>3.0.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.muhardin.endy.belajar</groupId>
@@ -14,8 +14,9 @@
 	<name>belajar-spring-authserver</name>
 	<description>Belajar Spring Authorization Server</description>
 	<properties>
-		<java.version>1.8</java.version>
-		<spring-authorization-server.version>0.2.3</spring-authorization-server.version>
+		<java.version>17</java.version>
+		<spring-authorization-server.version>1.0.1</spring-authorization-server.version>
+		<spring-security-cas.version>5.8.2</spring-security-cas.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -34,6 +35,11 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-authorization-server</artifactId>
 			<version>${spring-authorization-server.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-cas</artifactId>
+			<version>${spring-security-cas.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
